@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+<form method="get">
+    {{ form.status.label_tag }}
+    {{ form.status }}
+    <button type="submit">Filter</button>
+</form>
+{% for task in tasks %}
+ <a href = "{% url 'task-detail' task.pk %}">{{ task.title }}</a>
+ <p>{{ task.priority }}</p>
+ <p>{{ task.status }}</p>
+{% endfor %}
+{% endblock %}

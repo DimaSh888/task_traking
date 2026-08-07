@@ -1,0 +1,7 @@
+<h2>{{ task.title }}</h2>
+<h3>{{ task.status }}</h3>
+<p>{{ task.priority }}</p>
+<p>{{ task.creator }}</p>
+<small>{{ due_date }}</small>
+<a href="{% url 'task-update' task.id %}"><button>Update</button></a>
+<a href="{% url 'task-delete' task.id %}"><button>Delete</button></a>
