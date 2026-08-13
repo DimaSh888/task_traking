@@ -2,4 +2,4 @@
     {% csrf_token %}
     <button type="submit">Submit</button>
 </form>
-<button>No</button>
+<a href="{% url 'task-detail' task.id %}"><button>Nope</button></a>
