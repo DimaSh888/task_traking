@@ -5,3 +5,26 @@
 <small>{{ due_date }}</small>
 <a href="{% url 'task-update' task.id %}"><button>Update</button></a>
 <a href="{% url 'task-delete' task.id %}"><button>Delete</button></a>
+<h3>Comments</h3>
+{% for comment in task.comments.all %}
+<p>{{ comment.content }}</p>
+{% if comment.author == request.user %}
+
+            <a href="{% url 'comment-edit' comment.pk %}">
+                edit
+            </a>
+
+            <a href="{% url 'comment-delete' comment.pk %}">
+                delete
+            </a>
+
+        {% endif %}
+<small>{{ comment.author }}</small>
+<small>{{ comment.created_at }}</small>
+{% endfor %}
+<h4>Add comment</h4>
+<form method="post">
+    {% csrf_token %}
+    {{ comment_form.as_p }}
+    <button type=submit>Create</button>
+</form>

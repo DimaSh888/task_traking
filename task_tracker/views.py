@@ -1,10 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import CreateView, ListView, DetailView, UpdateView, DeleteView
-from .models import Task
+from .models import Task, Comment
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
-from .forms import TaskForm, TaskFlterForm
+from .forms import TaskForm, TaskFlterForm, CommentForm
 from .mixins import UserIsOwnerMixin
+
 # Create your views here.
 
 
@@ -29,6 +30,21 @@ class TaskDetailView(LoginRequiredMixin, DetailView):
     model = Task
     context_object_name = 'task'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["comment_form"] = CommentForm()
+        return context
+
+    def post(self, requests, *args, **kwargs):
+        comment_form = CommentForm(requests.POST)
+        if comment_form.is_valid():
+            comment = comment_form.save(commit=False)
+            comment.author = requests.user
+            comment.task = self.get_object()
+            comment.save()
+
+            return redirect("task-detail", pk=comment.task.pk)
+
 
 class TaskCreateView(CreateView):
     model = Task
@@ -50,3 +66,18 @@ class TaskUpdateView(UserIsOwnerMixin, UpdateView):
 class TaskDeleteView(UserIsOwnerMixin, DeleteView):
     model = Task
     success_url = reverse_lazy("task-list")
+
+
+class CommentDeleteView(DeleteView):
+    model = Comment
+
+    def get_success_url(self):
+        return reverse_lazy("task-detail", kwargs={"pk": self.object.task.pk})
+
+
+class CommentUpdateView(UpdateView):
+    model = Comment
+    fields = ["content"]
+
+    def get_success_url(self):
+        return reverse_lazy("task-detail", kwargs={"pk": self.object.task.pk})

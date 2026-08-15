@@ -1,0 +1,5 @@
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Submit</button>
+</form>
+<a href="{{ request.META.HTTP_REFERER }}"><button>Nope</button></a>
