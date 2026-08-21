@@ -1,5 +1,1 @@
-<form method="post">
-    {% csrf_token %}
-    <button type="submit">Submit</button>
-</form>
-<a href="{{ request.META.HTTP_REFERER }}"><button>Nope</button></a>
+{% extends 'base.html' %}{% block content %}<section class="confirm-page"><div class="confirm-card"><div class="warning-icon">!</div><p class="eyebrow">DELETE COMMENT</p><h1>Delete this comment?</h1><p>This action cannot be undone.</p><div class="action-row"><form method="post">{% csrf_token %}<button type="submit" class="btn btn-danger">Yes, delete</button></form><a class="btn btn-ghost" href="{{ request.META.HTTP_REFERER }}">Cancel</a></div></div></section>{% endblock %}

@@ -1,14 +1,17 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {% load static %}
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <title>Document</title>
+    <title>{% block title %}TaskFlow{% endblock %}</title>
 </head>
 <body>
-    {% block content %}
-    {% endblock %}
+<header class="site-header">
+    <a class="brand" href="{% url 'task-list' %}"><span class="brand-mark">✓</span> TaskFlow</a>
+    <a class="new-task-btn" href="{% url 'task-create' %}">+ New task</a>
+</header>
+<main class="page-shell">{% block content %}{% endblock %}</main>
 </body>
 </html>

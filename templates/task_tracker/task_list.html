@@ -1,13 +1,31 @@
 {% extends 'base.html' %}
+{% block title %}Tasks · TaskFlow{% endblock %}
 {% block content %}
-<form method="get">
-    {{ form.status.label_tag }}
-    {{ form.status }}
-    <button type="submit">Filter</button>
+<section class="hero">
+    <div><p class="eyebrow">WORKSPACE</p><h1>Your tasks</h1><p>Keep everything organized and moving forward.</p></div>
+    <div class="task-count">{{ tasks|length }} task{{ tasks|length|pluralize }}</div>
+</section>
+<form method="get" class="filter-bar">
+    <div class="field filter-field">{{ form.status.label_tag }}{{ form.status }}</div>
+    <button type="submit" class="btn btn-primary">Apply filter</button>
+    <a class="btn btn-ghost" href="{% url 'task-list' %}">Reset</a>
 </form>
+<section class="task-grid">
 {% for task in tasks %}
- <a href = "{% url 'task-detail' task.pk %}">{{ task.title }}</a>
- <p>{{ task.priority }}</p>
- <p>{{ task.status }}</p>
+<article class="task-card">
+    <div class="task-card-top">
+        <span class="badge status-{{ task.status }}">{{ task.get_status_display }}</span>
+        <span class="priority priority-{{ task.priority }}">{{ task.get_priority_display }}</span>
+    </div>
+    <h2><a href="{% url 'task-detail' task.pk %}">{{ task.title }}</a></h2>
+    {% if task.description %}<p class="task-description">{{ task.description|truncatechars:120 }}</p>{% endif %}
+    <div class="task-footer">
+        <span>Created by {{ task.creator }}</span>
+        {% if task.due_date %}<span>Due {{ task.due_date|date:"M j, H:i" }}</span>{% endif %}
+    </div>
+</article>
+{% empty %}
+<div class="empty-state"><div class="empty-icon">✓</div><h2>No tasks found</h2><p>Create your first task or change the filter.</p><a class="btn btn-primary" href="{% url 'task-create' %}">Create task</a></div>
 {% endfor %}
+</section>
 {% endblock %}
