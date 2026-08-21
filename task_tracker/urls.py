@@ -11,4 +11,6 @@ urlpatterns = [
          views.CommentUpdateView.as_view(), name='comment-edit'),
     path('/comment-delete/<int:pk>/',
          views.CommentDeleteView.as_view(), name='comment-delete'),
+    path('login/', views.UserLoginView.as_view(), name='login'),
+    path('logout/', views.UserLogoutView.as_view(), name='logout'),
 ]

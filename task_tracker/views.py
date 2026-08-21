@@ -5,6 +5,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 from .forms import TaskForm, TaskFlterForm, CommentForm
 from .mixins import UserIsOwnerMixin
+from django.contrib.auth.views import LoginView, LogoutView
+from django.contrib.auth.forms import UserCreationForm
 
 # Create your views here.
 
@@ -81,3 +83,14 @@ class CommentUpdateView(UpdateView):
 
     def get_success_url(self):
         return reverse_lazy("task-detail", kwargs={"pk": self.object.task.pk})
+
+
+class UserLoginView(LoginView):
+    redirect_authenticated_user = True
+
+    def get_success_url(self):
+        return reverse_lazy('task-list')
+
+
+class UserLogoutView(LogoutView):
+    next_page = reverse_lazy('login')

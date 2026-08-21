@@ -8,6 +8,19 @@
     <title>{% block title %}TaskFlow{% endblock %}</title>
 </head>
 <body>
+    <a  href="{% url 'login' %}">login</a>
+    <form action="{% url 'logout' %}" method="post" style="display: inline;">
+        {% csrf_token %}
+        <button type="submit" style="background: none; border: none; padding: 0; color: blue; cursor: pointer;">
+            logout
+        </button>
+    </form>
+    {% if request.user.is_authenticated %}
+    <p>Hello, {{ request.user.username }}!</p>
+{% else %}
+    <p>HELLO NONAME</p>
+{% endif %}
+
 <header class="site-header">
     <a class="brand" href="{% url 'task-list' %}"><span class="brand-mark">✓</span> TaskFlow</a>
     <a class="new-task-btn" href="{% url 'task-create' %}">+ New task</a>

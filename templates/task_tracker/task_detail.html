@@ -1,3 +1,5 @@
+{% load custom_tag %}
+
 <h2>{{ task.title }}</h2>
 <h3>{{ task.status }}</h3>
 <p>{{ task.priority }}</p>
@@ -8,6 +10,36 @@
 <h3>Comments</h3>
 {% for comment in task.comments.all %}
 <p>{{ comment.content }}</p>
+
+{% if comment.media %}
+
+    {% if comment.media.name|endswith_any:".jpg,.jpeg,.png,.gif,.webp" %}
+
+        <img src="{{ comment.media.url }}"
+            alt="Зображення коментаря"
+            style="max-width: 1000px; max-height: 800px;">
+
+    {% elif comment.media.name|endswith_any:".mp4,.webm,.mov,.ogg" %}
+
+        <video controls style="max-width: 1000px;">
+            <source src="{{ comment.media.url }}">
+        </video>
+
+    {% elif comment.media.name|endswith_any:".mp3,.wav,.m4a" %}
+
+        <audio controls>
+            <source src="{{ comment.media.url }}">
+        </audio>
+
+    {% else %}
+
+        <a href="{{ comment.media.url }}" download>
+            📎 Завантажити файл
+        </a>
+
+    {% endif %}
+{% endif %}
+
 {% if comment.author == request.user %}
 
             <a href="{% url 'comment-edit' comment.pk %}">
@@ -17,13 +49,13 @@
             <a href="{% url 'comment-delete' comment.pk %}">
                 delete
             </a>
+{% endif %}
 
-        {% endif %}
 <small>{{ comment.author }}</small>
 <small>{{ comment.created_at }}</small>
 {% endfor %}
 <h4>Add comment</h4>
-<form method="post">
+<form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ comment_form.as_p }}
     <button type=submit>Create</button>
