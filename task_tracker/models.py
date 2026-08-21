@@ -36,6 +36,8 @@ class Comment(models.Model):
     author = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="comments", null=True, blank=True)
     content = models.TextField()
+    media = models.FileField(
+        upload_to="comments_media/", blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

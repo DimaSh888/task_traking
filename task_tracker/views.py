@@ -35,11 +35,11 @@ class TaskDetailView(LoginRequiredMixin, DetailView):
         context["comment_form"] = CommentForm()
         return context
 
-    def post(self, requests, *args, **kwargs):
-        comment_form = CommentForm(requests.POST)
+    def post(self, request, *args, **kwargs):
+        comment_form = CommentForm(request.POST, request.FILES)
         if comment_form.is_valid():
             comment = comment_form.save(commit=False)
-            comment.author = requests.user
+            comment.author = request.user
             comment.task = self.get_object()
             comment.save()
 

@@ -1,14 +1,5 @@
-{% extends 'base.html' %}
-{% block content %}
-<section class="form-page">
-    <div class="form-card">
-        <p class="eyebrow">COMMENT</p
-            ><h1>Edit comment</h1>
-            <form method="post" class="styled-form">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit" class="btn btn-primary">Save changes</button>
-            </form>
-        </div>
-    </section>
-    {% endblock %}
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Confirm</button>
+</form>
