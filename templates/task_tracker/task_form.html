@@ -1,5 +1,20 @@
-<form method="post">
+{% extends "base.html" %}
+{% block title %}Task form — TaskFlow{% endblock %}
+{% block content %}
+<div class="form-page">
+<a class="back-link" href="{% url 'task-list' %}">← Back to tasks</a>
+<section class="form-card">
+  <p class="eyebrow">Task editor</p>
+  <h1>{{ view.object|default:"Create task" }}</h1>
+  <p class="form-subtitle">Fill in the details below.</p>
+  <form class="styled-form" method="post">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit">Confirm</button>
-</form>
+    <div class="action-row">
+      <button class="btn btn-primary" type="submit">Save task</button>
+      <a class="btn btn-ghost" href="{% url 'task-list' %}">Cancel</a>
+    </div>
+  </form>
+</section>
+</div>
+{% endblock %}

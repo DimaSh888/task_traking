@@ -7,6 +7,7 @@ from .forms import TaskForm, TaskFlterForm, CommentForm
 from .mixins import UserIsOwnerMixin
 from django.contrib.auth.views import LoginView, LogoutView
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import login
 
 # Create your views here.
 
@@ -94,3 +95,13 @@ class UserLoginView(LoginView):
 
 class UserLogoutView(LogoutView):
     next_page = reverse_lazy('login')
+
+
+class RegisterView(CreateView):
+    form_class = UserCreationForm
+    template_name = "registration/register.html"
+
+    def form_valid(self, form):
+        user = form.save()
+        login(self.request, user)
+        return redirect(reverse_lazy('login'))

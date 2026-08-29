@@ -1,62 +1,66 @@
+{% extends "base.html" %}
 {% load custom_tag %}
-
-<h2>{{ task.title }}</h2>
-<h3>{{ task.status }}</h3>
-<p>{{ task.priority }}</p>
-<p>{{ task.creator }}</p>
-<small>{{ due_date }}</small>
-<a href="{% url 'task-update' task.id %}"><button>Update</button></a>
-<a href="{% url 'task-delete' task.id %}"><button>Delete</button></a>
-<h3>Comments</h3>
-{% for comment in task.comments.all %}
-<p>{{ comment.content }}</p>
-
-{% if comment.media %}
-
-    {% if comment.media.name|endswith_any:".jpg,.jpeg,.png,.gif,.webp" %}
-
-        <img src="{{ comment.media.url }}"
-            alt="Зображення коментаря"
-            style="max-width: 1000px; max-height: 800px;">
-
-    {% elif comment.media.name|endswith_any:".mp4,.webm,.mov,.ogg" %}
-
-        <video controls style="max-width: 1000px;">
-            <source src="{{ comment.media.url }}">
-        </video>
-
-    {% elif comment.media.name|endswith_any:".mp3,.wav,.m4a" %}
-
-        <audio controls>
-            <source src="{{ comment.media.url }}">
-        </audio>
-
-    {% else %}
-
-        <a href="{{ comment.media.url }}" download>
-            📎 Завантажити файл
-        </a>
-
-    {% endif %}
-{% endif %}
-
-{% if comment.author == request.user %}
-
-            <a href="{% url 'comment-edit' comment.pk %}">
-                edit
-            </a>
-
-            <a href="{% url 'comment-delete' comment.pk %}">
-                delete
-            </a>
-{% endif %}
-
-<small>{{ comment.author }}</small>
-<small>{{ comment.created_at }}</small>
-{% endfor %}
-<h4>Add comment</h4>
-<form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ comment_form.as_p }}
-    <button type=submit>Create</button>
-</form>
+{% block title %}{{ task.title }} — TaskFlow{% endblock %}
+{% block content %}
+<a class="back-link" href="{% url 'task-list' %}">← Back to tasks</a>
+<div class="detail-layout">
+  <section>
+    <article class="detail-card">
+      <div class="task-card-top">
+        <span class="badge status-{{ task.status }}">{{ task.status }}</span>
+        <span class="priority priority-{{ task.priority }}">{{ task.priority }}</span>
+      </div>
+      <h1>{{ task.title }}</h1>
+      <p class="task-body">{{ task.description|default:"No description provided." }}</p>
+      <div class="meta-grid">
+        <div><small>CREATOR</small><strong>{{ task.creator }}</strong></div>
+        <div><small>DUE DATE</small><strong>{{ due_date|default:"No due date" }}</strong></div>
+      </div>
+      <div class="action-row">
+        <a class="btn btn-primary" href="{% url 'task-update' task.id %}">Update</a>
+        <a class="btn btn-danger" href="{% url 'task-delete' task.id %}">Delete</a>
+      </div>
+    </article>
+    <section class="comments-section">
+      <div class="section-heading"><h2>Comments</h2><span>{{ task.comments.all|length }}</span></div>
+      {% for comment in task.comments.all %}
+      <article class="comment">
+        <div class="comment-avatar">{{ comment.author.username|first|upper }}</div>
+        <div class="comment-content">
+          <div><strong>{{ comment.author }}</strong><small>{{ comment.created_at }}</small></div>
+          <p>{{ comment.content }}</p>
+          {% if comment.media %}
+            {% if comment.media.name|endswith_any:".jpg,.jpeg,.png,.gif,.webp" %}
+              <img src="{{ comment.media.url }}" alt="Comment image">
+            {% elif comment.media.name|endswith_any:".mp4,.webm,.mov,.ogg" %}
+              <video controls><source src="{{ comment.media.url }}"></video>
+            {% elif comment.media.name|endswith_any:".mp3,.wav,.m4a" %}
+              <audio controls><source src="{{ comment.media.url }}"></audio>
+            {% else %}
+              <a href="{{ comment.media.url }}" download>📎 Download file</a>
+            {% endif %}
+          {% endif %}
+          {% if comment.author == request.user %}
+          <div class="comment-actions">
+            <a href="{% url 'comment-edit' comment.pk %}">Edit</a>
+            <a class="danger-link" href="{% url 'comment-delete' comment.pk %}">Delete</a>
+          </div>
+          {% endif %}
+        </div>
+      </article>
+      {% empty %}
+      <div class="empty-state"><div class="empty-icon">💬</div><h3>No comments yet</h3><p>Be the first to leave a comment.</p></div>
+      {% endfor %}
+    </section>
+  </section>
+  <aside class="comment-panel">
+    <h2>Add comment</h2>
+    <p class="muted">Share an update or attach a file.</p>
+    <form class="styled-form" method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ comment_form.as_p }}
+      <button class="btn btn-primary full-width" type="submit">Create comment</button>
+    </form>
+  </aside>
+</div>
+{% endblock %}

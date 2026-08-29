@@ -1,7 +1,8 @@
-<form method="post">
-    {% csrf_token %}
-
-    {{ form.as_p }}
-
-    <button type="submit">login</button>
-</form>
+{% extends "base.html" %}
+{% block title %}Login — TaskFlow{% endblock %}
+{% block content %}
+<div class="form-page">
+<section class="form-card"><p class="eyebrow">Welcome back</p><h1>Login</h1><p class="form-subtitle">Sign in to manage your tasks.</p>
+<form class="styled-form" method="post">{% csrf_token %}{{ form.as_p }}<input type="hidden" name="next" value="{{ next }}"><button class="btn btn-primary full-width" type="submit">Login</button></form>
+</section></div>
+{% endblock %}

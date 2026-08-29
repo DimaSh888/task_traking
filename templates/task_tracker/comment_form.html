@@ -1,5 +1,18 @@
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Confirm</button>
-</form>
+{% extends "base.html" %}
+{% block title %}Comment — TaskFlow{% endblock %}
+{% block content %}
+<div class="form-page">
+<a class="back-link" href="{% url 'task-list' %}">← Back to tasks</a>
+<section class="form-card">
+    <p class="eyebrow">Comment</p>
+    <h1>Edit comment</h1>
+    <form class="styled-form" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="action-row">
+            <button class="btn btn-primary" type="submit">Save</button>
+        </div>
+    </form>
+</section>
+</div>
+{% endblock %}

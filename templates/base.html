@@ -8,23 +8,29 @@
     <title>{% block title %}TaskFlow{% endblock %}</title>
 </head>
 <body>
-    <a  href="{% url 'login' %}">login</a>
-    <form action="{% url 'logout' %}" method="post" style="display: inline;">
-        {% csrf_token %}
-        <button type="submit" style="background: none; border: none; padding: 0; color: blue; cursor: pointer;">
-            logout
-        </button>
-    </form>
-    {% if request.user.is_authenticated %}
-    <p>Hello, {{ request.user.username }}!</p>
-{% else %}
-    <p>HELLO NONAME</p>
-{% endif %}
 
 <header class="site-header">
-    <a class="brand" href="{% url 'task-list' %}"><span class="brand-mark">✓</span> TaskFlow</a>
-    <a class="new-task-btn" href="{% url 'task-create' %}">+ New task</a>
+    <a class="brand" href="{% url 'task-list' %}">
+        <span class="brand-mark">✓</span> TaskFlow
+    </a>
+
+    <nav class="header-actions">
+        {% if request.user.is_authenticated %}
+            <span class="user-name">Hi, {{ request.user.username }}</span>
+            <a class="new-task-btn" href="{% url 'task-create' %}">+ New task</a>
+            <form class="logout-form" method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button class="logout-btn" type="submit">Logout</button>
+            </form>
+        {% else %}
+            <a class="new-task-btn" href="{% url 'login' %}">Login</a>
+        {% endif %}
+    </nav>
 </header>
-<main class="page-shell">{% block content %}{% endblock %}</main>
+
+<main class="page-shell">
+    {% block content %}{% endblock %}
+</main>
+
 </body>
 </html>

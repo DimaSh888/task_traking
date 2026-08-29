@@ -1,5 +1,19 @@
-<form method="post">
-    {% csrf_token %}
-    <button type="submit">Submit</button>
-</form>
-<a href="{% url 'task-detail' task.id %}"><button>Nope</button></a>
+{% extends "base.html" %}
+{% block title %}Delete task — TaskFlow{% endblock %}
+{% block content %}
+<div class="confirm-page">
+    <section class="confirm-card">
+        <div class="warning-icon">!</div>
+        <p class="eyebrow">Delete task</p>
+        <h1>Are you sure?</h1>
+        <p>This action cannot be undone.</p>
+        <div class="action-row">
+            <form method="post">
+                {% csrf_token %}
+                <button class="btn btn-danger" type="submit">Delete task</button>
+            </form>
+            <a class="btn btn-ghost" href="{% url 'task-list' %}">Cancel</a>
+        </div>
+    </section>
+</div>
+{% endblock %}
