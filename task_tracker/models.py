@@ -38,7 +38,7 @@ class Comment(models.Model):
     content = models.TextField()
     media = models.FileField(
         upload_to="comments_media/", blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=False)
 
     def __str__(self):
         return f'{self.task}, {self.author}'
